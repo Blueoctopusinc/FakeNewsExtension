@@ -4261,20 +4261,31 @@ var sources =   [{"siteTitle":"100PercentFedUp",
 
 var activeTabid;
      
-setInterval( chrome.tabs.query({currentWindow: true, active: true}, function(tabs){
-    console.log(tabs[0].url);
-}), 1)
+chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
+  if (changeInfo.status == 'complete' && tab.active) {
+
+   chrome.tabs.query({currentWindow: true, active: true}, function(tabs){
+    var checked = tabs[0].url;
+debugger;
+        check(checked);
+    }
+);
+
+  }
+});
 
 
 var activeTabid;
+
+function check(toCheck){
 var match = false;
-        //
+       //
 for (var index = 0; index < sources.length; ++index) {
 var matchCheck = sources[index];
 debugger;
 
 
-            if(matchCheck.siteUrl.includes(activeTabid)){
+            if(matchCheck.siteUrl.includes(toCheck)){
                 debugger;
                 match = true
                 break;
@@ -4284,6 +4295,7 @@ debugger;
 if(match == true){
     chrome.browserAction.setIcon({path: 'image path'});
     window.alert("sometext");
+}
 }
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
     if(changeInfo.status == "loading") {
