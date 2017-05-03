@@ -4258,7 +4258,6 @@ var sources =   [{"siteTitle":"100PercentFedUp",
    "siteNotes":""
 }];
 
-
 var activeTabid;
      
 chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
@@ -4276,17 +4275,25 @@ debugger;
 
 
 var activeTabid;
-
+function notify(name, reason, ghits){
+    var opt = {
+  type: "list",
+  title: "Fake News Alert! " + name.toString() + " is known to propogate fake news.",
+  message: name.toString() + " is known to propogate fake news.",
+  iconUrl: 'Bad Logo.png',
+  items: [{ title: "Type of fake news:", message:reason.toString()},
+          { title: "Google Hits:", message:ghits.toString()}],
+};
+chrome.notifications.create('FakeNews',opt)
+}
 function check(toCheck){
 var match = false;
        //
 for (var index = 0; index < sources.length; ++index) {
 var matchCheck = sources[index];
-debugger;
 
 
             if(matchCheck.siteUrl.includes(toCheck)){
-                debugger;
                 match = true
                 break;
             }
@@ -4294,11 +4301,14 @@ debugger;
   
 if(match == true){
     chrome.browserAction.setIcon({path: 'image path'});
+    debugger;
     window.alert("sometext");
-}
-}
+      notify(matchCheck.siteTitle,matchCheck.siteCategory,matchCheck.siteGoogleHits,matchCheck);
+
+
+
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
     if(changeInfo.status == "loading") {
         checkForValidUrl(tabId, changeInfo, tab);
     }
-});
+})}};
